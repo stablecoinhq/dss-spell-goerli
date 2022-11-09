@@ -1,0 +1,6 @@
+[submodule "lib/dss-exec-lib"]
+	path = lib/dss-exec-lib
+	url = git@github.com:stablecoinhq/dss-exec-lib.git
+[submodule "lib/dss-interfaces"]
+	path = lib/dss-interfaces
+	url = https://github.com/makerdao/dss-interfaces.git
