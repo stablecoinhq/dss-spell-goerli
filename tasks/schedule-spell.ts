@@ -37,6 +37,8 @@ export async function scheduleSpell(
     console.log("Scheduling spell");
     const scheduled = await spell.schedule();
     console.log(`Spell scheduled: ${scheduled.hash}`);
+    const eta = await spell.eta();
+    console.log(`eta ${eta.toString()}`)
     console.log("Done");
   }
 }
