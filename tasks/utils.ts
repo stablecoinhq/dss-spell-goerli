@@ -1,6 +1,10 @@
 import { ContractTransaction } from "ethers";
 
-export const DSS_EXEC_LIB_ADDRESS = "0x7A75a201cef07Ba8fe26059E12aBAE500F813D20";
+export const DSS_EXEC_LIB_ADDRESS =
+  "0x60ee7977D451149EE05dDd34Ba2A37461B82598B";
+
+export const VOID =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 function asciiToHexa(str: string) {
   var arr = [];

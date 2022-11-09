@@ -5,6 +5,7 @@ import {
   deploySpell,
   executeSpell,
   scheduleSpell,
+  voteSpell,
 } from "./tasks";
 
 require("dotenv").config();
@@ -24,6 +25,10 @@ task("schedule-spell", "Schedule DssSpell contract")
 task("execute-spell", "Execute DssSpell contract")
   .addParam("address", "dss spell address")
   .setAction((args, hre) => executeSpell(hre, args));
+
+task("vote-spell", "Vote DssSpell contract")
+  .addParam("address", "dss spell address")
+  .setAction((args, hre) => voteSpell(hre, args));
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -60,6 +65,7 @@ const config: HardhatUserConfig = {
       forking: {
         url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY!}`,
       },
+      accounts: { mnemonic: process.env.MNEMONIC! },
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY!}`,
