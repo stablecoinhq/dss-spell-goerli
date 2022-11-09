@@ -7,6 +7,7 @@ import {
   scheduleSpell,
   voteSpell,
 } from "./tasks";
+import { checkSpell } from "./tasks/check-spell";
 
 require("dotenv").config();
 
@@ -29,6 +30,10 @@ task("execute-spell", "Execute DssSpell contract")
 task("vote-spell", "Vote DssSpell contract")
   .addParam("address", "dss spell address")
   .setAction((args, hre) => voteSpell(hre, args));
+
+task("check-spell", "Check the current status of spell")
+  .addParam("address", "dss spell address")
+  .setAction((args, hre) => checkSpell(hre, args));
 
 const config: HardhatUserConfig = {
   solidity: {

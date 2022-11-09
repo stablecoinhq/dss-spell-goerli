@@ -1,24 +1,15 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
-import { DSS_EXEC_LIB_ADDRESS, toHex, VOID } from "./utils";
+import { load, toHex } from "./utils";
+
+const VOID =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 export async function voteSpell(
   hre: HardhatRuntimeEnvironment,
   args: TaskArguments
 ) {
-  const { ethers } = hre;
+  const { ethers, dssExecLib, spell } = await load(hre, args);
   const [myAccount] = await ethers.getSigners();
-  const dssExecLib = await ethers.getContractAt(
-    "DssExecLib",
-    DSS_EXEC_LIB_ADDRESS
-  );
-  const { address: spellAddress } = args;
-  if (!spellAddress) {
-    throw new Error("Spell address not specified");
-  }
-
-  if (!ethers.utils.isAddress(spellAddress)) {
-    throw new Error(`Invalid addres ${spellAddress}`);
-  }
 
   const chiefAddress = await dssExecLib.getChangelogAddress(toHex("MCD_ADM"));
   const tokenAddress = await dssExecLib.getChangelogAddress(toHex("MCD_GOV"));
@@ -28,15 +19,15 @@ export async function voteSpell(
   const currentlyVotingFor = await chief.votes(myAccount.address);
   if (currentlyVotingFor !== VOID) {
     const spellAddressVotingFor = await chief.slates(currentlyVotingFor, 0);
-    if (spellAddressVotingFor === spellAddress) {
+    if (spellAddressVotingFor === spell.address) {
       throw new Error(
-        `Address ${myAccount.address} already voted for spell ${spellAddress}`
+        `Address ${myAccount.address} already voted for spell ${spell.address}`
       );
     }
   }
 
   const hat = await chief.hat();
-  if (hat === spellAddress) {
+  if (hat === spell.address) {
     throw new Error("No need to vote because hat is already spell");
   }
 
@@ -59,7 +50,7 @@ export async function voteSpell(
   const depositAfter = await chief.deposits(myAccount.address);
   if (depositAfter.gt(0)) {
     console.log("Voting spell");
-    const voted = await chief["vote(address[])"]([spellAddress]);
+    const voted = await chief["vote(address[])"]([spell.address]);
     console.log(`Voted: ${voted.hash}`);
   }
 }

@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
-import { DSS_EXEC_LIB_ADDRESS, toHex } from "./utils";
+import { load, toHex } from "./utils";
 
 /**
  * 投票の結果、承認されたSpellをliftする
@@ -9,23 +9,9 @@ export async function scheduleSpell(
   hre: HardhatRuntimeEnvironment,
   args: TaskArguments
 ) {
-  const { ethers } = hre;
-  const { address: spellAddress } = args;
-  if (!spellAddress) {
-    throw new Error("Spell address not specified");
-  }
-
-  if (!ethers.utils.isAddress(spellAddress)) {
-    throw new Error(`Invalid addres ${spellAddress}`);
-  }
-
-  const dssExecLib = await ethers.getContractAt(
-    "DssExecLib",
-    DSS_EXEC_LIB_ADDRESS
-  );
+  const { ethers, dssExecLib, spell } = await load(hre, args);
   const chiefAddress = await dssExecLib.getChangelogAddress(toHex("MCD_ADM"));
   const chief = await ethers.getContractAt("DssChief", chiefAddress);
-  const spell = await ethers.getContractAt("DssSpell", spellAddress as string);
   console.log("Lifting spell");
   const lifted = await chief
     .lift(spell.address)
@@ -38,7 +24,7 @@ export async function scheduleSpell(
     const scheduled = await spell.schedule();
     console.log(`Spell scheduled: ${scheduled.hash}`);
     const eta = await spell.eta();
-    console.log(`eta ${eta.toString()}`)
+    console.log(`eta ${eta.toString()}`);
     console.log("Done");
   }
 }
