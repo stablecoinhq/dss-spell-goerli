@@ -4,6 +4,7 @@ import {
   deployDssExecLib,
   deploySpell,
   executeSpell,
+  freeToken as unlockTokens,
   scheduleSpell,
   voteSpell,
 } from "./tasks";
@@ -34,6 +35,10 @@ task("vote-spell", "Vote DssSpell contract")
 task("check-spell", "Check the current status of spell")
   .addParam("address", "dss spell address")
   .setAction((args, hre) => checkSpell(hre, args));
+
+task("unlock-tokens", "Unlock all the tokens that was used for voting").setAction(
+  (_args, hre) => unlockTokens(hre)
+);
 
 const config: HardhatUserConfig = {
   solidity: {
