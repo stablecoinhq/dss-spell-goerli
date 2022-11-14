@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import { DssSpell } from "../typechain-types";
 
 export const DSS_EXEC_LIB_ADDRESS =
-  "0x9A6A746f50E7Bd235c41bb1A7Fb901aA53cFE2b1";
+  "0x2b548724622895619e4D63B8a9A8E77244D2319A";
 
 function asciiToHexa(str: string) {
   var arr = [];
